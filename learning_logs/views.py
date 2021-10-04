@@ -1,5 +1,5 @@
 # renders the response - redirects the user back to "topics" page after submitting their topic
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Allows each user to own specific topics - importing "login_required()" function
 from django.contrib.auth.decorators import login_required
@@ -34,8 +34,7 @@ def topics(request):  # the "topics()" function needs 1 parameter: the "request"
 @login_required
 def topic(request, topic_id):  # second parameter accepts the value captured by the expression "/<int:topic_id>/" from "urls.py" and stores it in "topic_id"
     """Show a single topic and all its entires."""
-    topic = Topic.objects.get(
-        id=topic_id)  # "get()" function is used to retrieve the topic
+    topic = get_object_or_404(Topic, id=topic_id)
     # Make sure the topic belongs to the current user.
     if topic.owner != request.user:
         raise Http404
